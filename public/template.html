@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang='pt-BR'>
+  <head>
+    <title>Edição de Template</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+  </head>
+
+  <body>
+
+    <h1>Edição de template</h1>
+    <div class="container-fluid">
+      <div class="row">
+
+        <div class="col-md-12">
+
+          <form action="/api/templates" method="post">
+            <div class="form-group">
+              <label for="key">Key</label>
+              <input type="text" class="form-control" id="key" placeholder="Key">
+            </div>
+
+            <div class="form-group">
+              <label for="content">Content</label>
+              <textarea class="form-control" id="content"></textarea>
+            </div>
+
+            <div class="form-group">
+              <input id="save-template" type="submit" value="Submit">
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var submit = function(event){
+        event.preventDefault();
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open('POST', '/api/templates', true);
+
+        xhttp.onreadystatechange = function() {
+            if(xhttp.readyState == 4 && xhttp.status == 200) {
+              console.log('saved');
+            }
+        };
+
+        var data = {
+          key: document.getElementById('key').value,
+          content: document.getElementById('content').value
+        };
+
+        xhttp.setRequestHeader('Content-Type', 'application/json');
+        xhttp.send(JSON.stringify(data));
+      }
+      document.getElementById('save-template').onclick = submit;
+
+    </script>
+
+  </body>
+
+</html>
+

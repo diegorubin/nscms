@@ -26,9 +26,13 @@ app.use(function(req,res,next){
 app.post('/api/templates', function(req, res) {
     var template = req.body;
     var db = req.db;
+    var collection = db.get('templates');
 
     // saving in mongo
-    db.get('templates').insert(template);
+    collection.remove({key: template.key});
+    collection.insert(template, function(err, doc){
+      if(err) { console.log(err); }
+    });
 
 
     res.status(200).send('ok');
@@ -41,7 +45,7 @@ app.get('/:template', function(req, res){
     db.get('templates').find({key: key}, {}, function(err, templates){
       var template = templates[0];
       var render = dot.template(template.content);
-      var result = render({title: "home default", body: "teste do body"});
+      var result = render({title: "home", body: "teste do body"});
       res.status(200).send(result);
     });
 });
