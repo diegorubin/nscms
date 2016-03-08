@@ -14,7 +14,7 @@ Form to create template: http://localhost:3001/template.html
 At home there are two test variables that are interpolated: title and body.
 To use in template or partial:
 
-`{{it.title}}` and `{{it.body}}`
+`{{=it.title}}` and `{{=it.body}}`
 
 ## Partial
 
