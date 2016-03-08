@@ -5,7 +5,9 @@ NSCMS
 
 `node index.js`
 
-Server runs in port 3001
+Server runs in port 3001.
+
+Home: `http://localhost:3001/<template.key>`
 
 ## Template 
 
