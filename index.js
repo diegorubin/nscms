@@ -60,9 +60,33 @@ app.get('/:template', function(req, res){
     db.get('templates').find({key: key}, {}, function(err, templates){
       if (!err && templates[0]) {
         var template = templates[0];
-        var render = dot.template(template.content);
-        var result = render({title: "home", body: "teste do body"});
-        res.status(200).send(result);
+
+        // recover partials
+        var partial_keys = [];
+
+        var re = /\{\{#def.(\w+)\}\}/g;
+        var def = {};
+        var m;
+
+        do {
+            m = re.exec(template.content);
+            if (m) {
+              partial_keys.push(m[1]);
+            }
+        } while (m);
+
+        db.get('partials').find({key: {$in: partial_keys}}, {}, function(err, partials){
+
+          for(var partial in partials) {
+            def[partials[partial].key] = partials[partial].content;
+          }
+
+          var render = dot.compile(template.content, def);
+          var result = render({title: "home", body: "teste do body"});
+
+          res.status(200).send(result);
+        });
+
       } else {
         res.status(404).send(result);
       }
