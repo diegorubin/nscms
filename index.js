@@ -1,7 +1,6 @@
 var express = require('express');
 var dot = require('dot');
 var path = require('path');
-var CollectionDriver = require('./collectionDriver').CollectionDriver;
 var bodyParser = require('body-parser');
 
 var app = express();
