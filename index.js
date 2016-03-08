@@ -38,15 +38,48 @@ app.post('/api/templates', function(req, res) {
     res.status(200).send('ok');
 });
 
+app.post('/api/partials', function(req, res) {
+    var partial = req.body;
+    var db = req.db;
+    var collection = db.get('partials');
+
+    // saving in mongo
+    collection.remove({key: partial.key});
+    collection.insert(partial, function(err, doc){
+      if(err) { console.log(err); }
+    });
+
+
+    res.status(200).send('ok');
+});
+
 app.get('/:template', function(req, res){
     var db = req.db;
     var key = req.params.template;
 
     db.get('templates').find({key: key}, {}, function(err, templates){
-      var template = templates[0];
-      var render = dot.template(template.content);
-      var result = render({title: "home", body: "teste do body"});
-      res.status(200).send(result);
+      if (!err && templates[0]) {
+        var template = templates[0];
+        var render = dot.template(template.content);
+        var result = render({title: "home", body: "teste do body"});
+        res.status(200).send(result);
+      } else {
+        res.status(404).send(result);
+      }
+    });
+});
+
+app.get('/partials/:partial', function(req, res){
+    var db = req.db;
+    var key = req.params.partial;
+
+    db.get('partials').find({key: key}, {}, function(err, partials){
+      if (!err && partials[0]) {
+        var partial = partials[0];
+        res.status(200).send(partial);
+      } else {
+        res.status(404).send(result);
+      }
     });
 });
 

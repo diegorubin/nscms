@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang='pt-BR'>
   <head>
-    <title>Edição de Template</title>
+    <title>Edição de Partial</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 
@@ -9,7 +9,7 @@
 
   <body>
 
-    <h1>Edição de template</h1>
+    <h1>Edição de partial</h1>
     <div class="container-fluid">
       <div class="row">
 
@@ -45,7 +45,7 @@
         event.preventDefault();
 
         var xhttp = new XMLHttpRequest();
-        xhttp.open('POST', '/api/templates', true);
+        xhttp.open('POST', '/api/partials', true);
 
         xhttp.onreadystatechange = function() {
             if(xhttp.readyState == 4 && xhttp.status == 200) {
@@ -65,31 +65,8 @@
       var update_preview = function(event) {
         event.preventDefault();
 
-        var raw = document.getElementById('content').value;
-        var re = /\{\{#def.(\w+)\}\}/g;
-        var def = {};
-
-        var xhttp = new XMLHttpRequest();
-
-        var m;
-        do {
-            m = re.exec(raw);
-            if (m) {
-              var partial = m[1];
-              xhttp.open('GET', '/partials/' + partial, false);
-              xhttp.onreadystatechange = function() {
-                  if(xhttp.readyState == 4 && xhttp.status == 200) {
-                    def[partial] = JSON.parse(xhttp.responseText).content;
-                  }
-              };
-              xhttp.send();
-            }
-
-        } while (m);
-
-        var template = doT.compile(raw, def);
+        var template = doT.template(document.getElementById('content').value);
         var content = template({});
-
         document.getElementById('result').src = "data:text/html;charset=utf-8," + escape(content);
       }
 
