@@ -32,6 +32,7 @@ app.post('/api/templates', function(req, res) {
     collection.remove({key: template.key});
     collection.insert(template, function(err, doc){
       if(err) { console.log(err); }
+      else {console.log('saving template: ' + template.key);}
     });
 
 
@@ -47,6 +48,7 @@ app.post('/api/partials', function(req, res) {
     collection.remove({key: partial.key});
     collection.insert(partial, function(err, doc){
       if(err) { console.log(err); }
+      else {console.log('saving partial: ' + partial.key);}
     });
 
 
@@ -64,7 +66,7 @@ app.get('/:template', function(req, res){
         // recover partials
         var partial_keys = [];
 
-        var re = /\{\{#def.(\w+)\}\}/g;
+        var re = /\{\{#def.([\w_]+)\}\}/g;
         var def = {};
         var m;
 
@@ -79,11 +81,13 @@ app.get('/:template', function(req, res){
 
           for(var partial in partials) {
             def[partials[partial].key] = partials[partial].content;
+            console.log('loading partial: ' + partials[partial].key);
           }
 
           var render = dot.compile(template.content, def);
           var result = render({title: "home", body: "teste do body"});
 
+          console.log('rendering template: ' + key);
           res.status(200).send(result);
         });
 
@@ -108,5 +112,5 @@ app.get('/partials/:partial', function(req, res){
 });
 
 app.listen(port);
-console.log('starting server');
+console.log('starting server - listening port 3001');
 
