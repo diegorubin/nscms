@@ -2,6 +2,7 @@ var express = require('express');
 var dot = require('dot');
 var path = require('path');
 var bodyParser = require('body-parser');
+var url = require('url');
 
 var app = express();
 var port = process.env.PORT || 3001;
@@ -59,6 +60,11 @@ app.get('/:template', function(req, res){
     var db = req.db;
     var key = req.params.template;
 
+    var url_parts = url.parse(req.url, true);
+    var data = url_parts.query;
+    data['title'] = data['title'] || 'Título';
+    data['body'] = data['body'] || 'corpo';
+
     db.get('templates').find({key: key}, {}, function(err, templates){
       if (!err && templates[0]) {
         var template = templates[0];
@@ -85,14 +91,14 @@ app.get('/:template', function(req, res){
           }
 
           var render = dot.compile(template.content, def);
-          var result = render({title: "home", body: "teste do body"});
+          var result = render(data);
 
           console.log('rendering template: ' + key);
           res.status(200).send(result);
         });
 
       } else {
-        res.status(404).send(result);
+        res.status(404).send('not found');
       }
     });
 });
