@@ -28,6 +28,12 @@
             </div>
 
             <div class="form-group">
+              <label>Parameters</label>
+              <a id="add-parameter">add</a>
+              <div id="parameters-wrap"></div>
+            </div>
+
+            <div class="form-group">
               <input id="save-template" type="submit" value="Submit">
               <a id="update-preview" class="btn">Update Preview</a>
             </div>
@@ -66,6 +72,14 @@
       var update_preview = function(event) {
         event.preventDefault();
 
+        var parameters = {};
+        var keys = document.getElementsByClassName("key");
+        var values = document.getElementsByClassName("value");
+
+        for(var i = 0; i < keys.length; i++) {
+          parameters[keys[i].value] = values[i].value;
+        }
+
         var raw = document.getElementById('content').value;
         var re = /\{\{#def.([\w_]+)\}\}/g;
         var def = {};
@@ -89,13 +103,41 @@
         } while (m);
 
         var template = doT.compile(raw, def);
-        var content = template({});
+        var content = template(parameters);
 
         document.getElementById('result').src = "data:text/html;charset=utf-8," + escape(content);
       }
 
+      var add_parameter = function(event) {
+        event.preventDefault();
+        var wrap = document.getElementById('parameters-wrap');
+        var line = document.createElement('p');
+
+        var key_label = document.createElement('label');
+        key_label.innerHTML = "Key: ";
+        line.appendChild(key_label);
+
+        var key_field = document.createElement('input');
+        key_field.className = "key";
+        key_field.type = "text";
+        line.appendChild(key_field);
+
+        var value_label = document.createElement('label');
+        value_label.innerHTML = "Value: ";
+        line.appendChild(value_label);
+
+        var value_field = document.createElement('input');
+        value_field.className = "value";
+        value_field.type = "text";
+        line.appendChild(value_field);
+
+        wrap.appendChild(line);
+
+      }
+
       document.getElementById('save-template').onclick = submit;
       document.getElementById('update-preview').onclick = update_preview;
+      document.getElementById('add-parameter').onclick = add_parameter;
 
     </script>
 
