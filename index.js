@@ -1,5 +1,5 @@
 var express = require('express');
-var dot = require('dot').process({path: "./views"});;
+var dot = require('dot');
 var path = require('path');
 var bodyParser = require('body-parser');
 var url = require('url');
