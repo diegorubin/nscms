@@ -28,6 +28,12 @@
             </div>
 
             <div class="form-group">
+              <label>Parameters</label>
+              <a id="add-parameter">add</a>
+              <div id="parameters-wrap"></div>
+            </div>
+
+            <div class="form-group">
               <input id="save-template" type="submit" value="Submit">
               <a id="update-preview" class="btn">Update Preview</a>
             </div>
@@ -39,40 +45,12 @@
 
     <iframe id="result" style="width: 100%;"></iframe>
 
-    <script type="text/javascript" src="/doT.min.js"></script>
+    <script type="text/javascript" src="/javascripts/doT.min.js"></script>
+    <script type="text/javascript" src="/javascripts/form.js"></script>
     <script type="text/javascript">
 
-      var submit = function(event){
-        event.preventDefault();
-
-        var xhttp = new XMLHttpRequest();
-        xhttp.open('POST', '/api/partials', true);
-
-        xhttp.onreadystatechange = function() {
-            if(xhttp.readyState == 4 && xhttp.status == 200) {
-              document.getElementById('last-save').innerHTML = new Date();
-            }
-        };
-
-        var data = {
-          key: document.getElementById('key').value,
-          content: document.getElementById('content').value
-        };
-
-        xhttp.setRequestHeader('Content-Type', 'application/json');
-        xhttp.send(JSON.stringify(data));
-      }
-
-      var update_preview = function(event) {
-        event.preventDefault();
-
-        var template = doT.template(document.getElementById('content').value);
-        var content = template({});
-        document.getElementById('result').src = "data:text/html;charset=utf-8," + escape(content);
-      }
-
-      document.getElementById('save-template').onclick = submit;
-      document.getElementById('update-preview').onclick = update_preview;
+      var form = new Form();
+      form.init('partials');
 
     </script>
 

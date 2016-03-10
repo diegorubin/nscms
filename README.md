@@ -3,6 +3,8 @@ NSCMS
 
 ## Run
 
+`npm install`
+
 `node index.js`
 
 Server runs in port 3001.
